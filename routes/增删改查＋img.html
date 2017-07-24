@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title></title>
+	<script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+	<script src="fetch.js"></script>
+</head>
+<body>
+<button id="btn">获取</button>
+
+<button id="btn2">获取匹配项</button><br>
+<input type="text" name="text" id="text" />
+<button id="btn3">add</button>
+<input type="text" name="text2" id="text2" />
+<button id="btn4">remove</button>
+<div id="d"></div>
+
+<input type="type" id="uid" />
+<input type="type" id="newt" />
+
+
+<button id="go">更新</button>
+<input type="file" name="" id="file" multiple>
+<button id="chuan">上传</button>
+</body>
+</html>	
+<script type="text/javascript">
+		// var files
+		//  file.onchange=function(element){
+		//   	console.log(element.files)
+		//   	files=element.target.files[0] 
+
+		//   }
+// 			$('button').click(function(){
+// 				console.log('xxx')
+// 				var fd=new FormData();  //表单处理数据的方法
+// 				fd.append('uploadedFile',files) //用append方法以键值对的方式保存
+// 		        console.log(fd)
+// 	$.ajax({
+// 				type:"post",
+// 				url:"http://localhost:8006/img/imgs",
+// 				async:true,
+// 				data:fd,
+// 				contentType:false,
+// 				processData:false,
+// 				success:function(e){
+					
+// 					console.log(e)
+
+			
+					
+
+// 			 // 在下面用再次调用ajax   向		
+//       			}
+// 			});
+// })
+
+var files={}
+file.onchange=function(e){
+
+	for (var i in e.target.files){
+		isNaN(i)!=true && (files[i]=e.target.files[i])
+	}
+}
+chuan.onclick=function(){
+	console.log(files)
+	var fd=new FormData();
+	for(var i in files){
+		fd.append("upload"+i,files[i])
+		console.log(files[i])
+	}
+
+	console.log(fd)
+	fetch("http://localhost:8006/img/imgs",{
+		method:"post",
+		body:fd
+	})
+	.then( data =>{return data.text()	})
+	.then( data => console.log(data))
+}
+
+
+
+
+go.onclick=function(){
+	fetch("http://localhost:8006/text/replace",{
+		method:"post",
+		headers:{
+			"Content-type": "application/x-www-form-urlencoded; charset=UTF-8" 
+		},
+		body:`id=${uid.value}&ids=${newt.value}`
+	})
+	.then((data)=>{
+		if(data.ok){
+			return data.json();
+		}
+	})
+	.then((data)=>{
+		console.log(data)
+	})
+}
+
+
+
+
+	btn.onclick=function(){
+		fetch("http://localhost:8006/img/navlists")
+		.then((data)=>data.json())
+		.then((data)=>{
+			console.log(data)
+		})
+		.catch((x)=>{
+			console.log(x)
+		})
+	}
+	// if(true) throw alert(1)
+
+	btn2.onclick=function(){
+    // alert(1)
+    	// var fromD=new FromData()
+    	console.log(text.value)
+    	fetch("http://localhost:8006/text/texts",{
+    		method:"post",
+    		// credentials:"include",
+    		mode:"cors",
+   			body:{"id":"1111","newt":"22222"},
+    		headers: { 
+      		"Content-type": "application/x-www-form-urlencoded; charset=UTF-8" 
+   			}
+    	})
+    	.then((response)=>{
+    		if(response.ok){
+    			return response.json()
+    		}
+    		
+
+    	}).then( Response =>{
+    		console.log(Response)
+    	})
+
+
+		// $.ajax({
+		// 	url:"http://localhost:8006/text/texts",
+		// 	type:"post",
+		// 	data:{'id':1},
+		// 	success:function(data){
+		// 		console.log(data)
+				
+		// 	},
+		// 	error:function(a){
+
+		// 	}
+		// })
+	}
+	btn3.onclick=function(){
+		var texts=text.value
+		// console.log(texts)
+		$.ajax({
+			url:"http://localhost:8006/ad/ad",
+			type:"post",
+			data:{'title':texts},
+			success:function(data){
+				console.log(data)
+				
+			},
+			error:function(a){
+
+			}
+		})
+
+
+
+	}
+
+	btn4.onclick=function(){
+		var texts=text2.value
+		console.log(texts)
+		$.ajax({
+			url:"http://localhost:8006/de/deles",
+			type:"post",
+			data:{'id':texts},
+			success:function(data){
+				console.log(data)
+				
+			},
+			error:function(a){
+
+			}
+		})
+
+
+
+	}
+
+</script>
